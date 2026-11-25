@@ -66,8 +66,8 @@
 ;; Show trailing whitespace
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
-;; Coloured Windows 11 title bar
-(load (expand-file-name "lisp/my-coloured-win32-titlebar" user-emacs-directory))
+;; Coloured Windows 11 title bar (TODO: reimplement this)
+;; (load (expand-file-name "lisp/my-coloured-win32-titlebar" user-emacs-directory))
 
 ;; Show list of the next keys after a prefix
 (which-key-mode 1)
