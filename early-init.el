@@ -1,6 +1,6 @@
 ;; early-init.el -*- lexical-binding: t; -*-
 
-;; Pauses the garbage collector while the config loads, then reset it back to default
+;; Pauses the garbage collector while the config loads, then reset it back to 16 MiB
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold (* 16 1024 1024))))

@@ -32,7 +32,7 @@
   (modus-themes-load-theme 'ef-dark))
 
 (use-package doom-themes :ensure t :defer t)
-(use-package base16-themes :ensure t :defer t)
+(use-package base16-theme :ensure t :defer t)
 
 ;; Quiet startup
 (setq inhibit-startup-echo-area-message "a")
@@ -59,8 +59,12 @@
 
 ;; Column guide line at column 100
 (setq-default display-fill-column-indicator-column 100)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 ;; Show the column in the mode line
 (column-number-mode 1)
+
+;; Show trailing whitespace
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
 ;; Coloured Windows 11 title bar
 (load (expand-file-name "lisp/my-coloured-win32-titlebar" user-emacs-directory))
@@ -68,7 +72,7 @@
 ;; Show list of the next keys after a prefix
 (which-key-mode 1)
 ;; Filter as-you-type lists in the minibuffer
-(fido-vertical-moded 1)
+(fido-vertical-mode 1)
 ;; Use y/n for questions
 (setq use-short-answers t)
 
@@ -105,11 +109,11 @@
 (add-hook 'sh-mode-hook (lambda () (sh-electric-here-document-mode -1)))
 
 (defun my-newline-autoindent ()
-  "Start a new line indentned like the line it is comming from. Spaces at the end of the line that
-  the cursor is comming from are removed, so that there is no trailing whitespace left."
+  "Start a new line indented like the line it is coming from. Spaces at the end of the line that
+  the cursor is coming from are removed, so that there is no trailing whitespace left."
   (interactive "*")
   (let ((indent (current-indentation)))
-    (delete-horizonal-space)
+    (delete-horizontal-space)
     (newline)
     (indent-to indent)))
 
@@ -124,13 +128,13 @@
 
 ;; Don't add a final new line when saving
 (setq require-final-newline nil
-      mode-require-file-newline nil)
+      mode-require-final-newline nil)
 
 ;; =================================================================================================
 ;; 4. Note taking, Org mode, Denote
 ;; -================================================================================================
 
-(defvar my-note-directory "C:/Users/a/Documents/Org/")
+(defvar my-notes-directory "C:/Users/a/Documents/Org/")
 (setq org-directory my-notes-directory)
 
 ;; Org buffers with soft wrap, no line numbers and centred text
@@ -148,7 +152,7 @@
 
 ;; Denote
 (use-package denote
-  :enusre t
+  :ensure t
   :bind (("C-c n n" . denote)
          ("C-c n f" . denote-open-or-create)
          ("C-c n l" . denote-link)
@@ -158,7 +162,7 @@
   (setq denote-directory my-notes-directory
         denote-file-type 'org))
 
-(defun my-note-search (regexp)
+(defun my-notes-search (regexp)
   "Function to search the contents of every single note in my notes directory"
   (interactive (list (read-string "Search notes for: ")))
   (rgrep regexp "*.org" my-notes-directory))
@@ -166,13 +170,13 @@
 ;; Allows me to create notes from anywhere in emacs
 ;;   C-c c n - Denote asks for a title and keywords, then opens a small window to write in.
 ;;   C-c C-c - Finishes and opens the note
-;;   C-c C-k - Cancels C-c C-c
+;;   C-c C-k - Cancels the note
 (global-set-key (kbd "C-c c") #'org-capture)
 (with-eval-after-load 'org-capture
-  (add-to-list 'org-caputre-templates
+  (add-to-list 'org-capture-templates
                '("n" "New note (Denote)" plain
                  (file denote-last-path)
-                 #'denote-org-caputre
+                 #'denote-org-capture
                  :no-save t
                  :immediate-finish nil
                  :kill-buffer t
